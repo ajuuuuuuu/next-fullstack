@@ -20,6 +20,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Verification email setup
+
+Add your Resend API key to `.env` as `RESEND_API_KEY`. The default sender,
+`onboarding@resend.dev`, is for testing and can only send to the email address
+associated with your Resend account. To send verification codes to other
+addresses, verify a domain in Resend and set `RESEND_FROM_EMAIL` to a sender
+on that domain, for example `Mystry App <no-reply@example.com>`. Restart the
+development server after changing environment variables.
+
+If signup reports an email delivery error, check the Resend dashboard and the
+development server logs. Also check the recipient's spam folder.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

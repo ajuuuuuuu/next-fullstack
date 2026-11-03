@@ -2,16 +2,14 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 import bcrypt from "bcryptjs";
 
-import { sendVerificationEmail } from "@//helpers/sendEmailverification";
+import { sendVerificationEmail } from "@/helpers/sendEmailverification";
 
 export async function POST(request:Request) {
-
-    await dbConnect()
-
     try {
+        await dbConnect()
         const {username,email,password} =await  request.json()
         const existingUserVerifiedByUsername=await UserModel.findOne(
-            {username,isVarified:true}
+            {username,isVerified:true}
         )
 
         if(existingUserVerifiedByUsername){
