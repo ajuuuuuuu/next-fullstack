@@ -21,7 +21,7 @@ export async function GET(request:Request) {
         //validate with zod
        const result = UsernameQuerySchema.safeParse(queryParam)
 
-       console.log("this is result :",result)
+       console.log("this is result in unique username file :",result)
 
        if(!result.success){
         
@@ -57,8 +57,8 @@ export async function GET(request:Request) {
 
        return Response.json({
 
-            success:false,
-            message:"Username is available"},
+            success:true,
+            message:"Username is unique"},
         {
             status:201
         })
