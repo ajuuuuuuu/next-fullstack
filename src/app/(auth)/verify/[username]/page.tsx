@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/toast";
@@ -20,7 +21,7 @@ import {
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
 
-const VerifyAccount = () => {
+const VerifyAccountForm = () => {
   const router = useRouter();
   const params = useParams<{ username: string }>();
   const form = useForm<z.infer<typeof verifySchema>>({
@@ -104,5 +105,17 @@ const VerifyAccount = () => {
     </>
   );
 };
+
+const VerifyAccount = () => (
+  <Suspense
+    fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        Loading verification form...
+      </div>
+    }
+  >
+    <VerifyAccountForm />
+  </Suspense>
+);
 
 export default VerifyAccount;
