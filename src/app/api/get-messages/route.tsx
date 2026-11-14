@@ -25,8 +25,8 @@ export async function GET(request:Request) {
     const userId = new mongoose.Types.ObjectId(user._id)
     try {
         const user = await UserModel.aggregate([
-            {$match:{id:userId}},
-            {$unwind:'$messages'},
+            {$match:{_id:userId}},
+            {$unwind:{path:'$messages', preserveNullAndEmptyArrays:true}},
             {
                 $sort:{'messages.createdAt':-1}
             },
@@ -43,12 +43,11 @@ export async function GET(request:Request) {
     { status: 401 }
   );
         }
-
-
         return Response.json(
     {
       success: true,
-      message: user[0].messages,
+      messages: user[0].messages.filter(Boolean),
+      message: "Messages fetched successfully",
      
     },
     { status: 200 }

@@ -12,6 +12,7 @@ import axios, { AxiosError } from 'axios';
 import { Loader2, RefreshCcw } from 'lucide-react';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -27,10 +28,13 @@ function UserDashboard() {
     setMessages(messages.filter((message) => message._id.toString() !== messageId));
   };
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const form = useForm({
     resolver: zodResolver(AcceptMessagesSchema),
+    defaultValues: {
+      acceptMessages: false,
+    },
   });
 
   const { register, watch, setValue } = form;
@@ -41,6 +45,7 @@ function UserDashboard() {
     try {
       const response = await axios.get<ApiResponse>('/api/accept-messages');
       setValue('acceptMessages', response.data.isAcceptingMessage?? false);
+      return response.data.isAcceptingMessage
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.add({
@@ -50,10 +55,11 @@ function UserDashboard() {
           'Failed to fetch message settings',
        type:"error"
       });
+      return false
     } finally {
       setIsSwitchLoading(false);
     }
-  }, [setValue, toast.add]);
+  }, [setValue]);
 
   const fetchMessages = useCallback(
     async (refresh: boolean = false) => {
@@ -73,7 +79,7 @@ function UserDashboard() {
         toast.add({
           title: 'Error',
           description:
-            axiosError.response?.data.message ?? 'Failed to fetch messages',
+            axiosError.response?.data.message ?? 'Failed to fetch messages try switch message on',
          type:"error"
         });
       } finally {
@@ -81,7 +87,7 @@ function UserDashboard() {
         setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages, toast.add]
+    [setIsLoading, setMessages]
   );
 
   // Fetch initial state from the server
@@ -89,10 +95,11 @@ function UserDashboard() {
     if (!session || !session.user) return;
 
     fetchMessages();
-
     fetchAcceptMessages();
-  }, [session, setValue, toast.add, fetchAcceptMessages, fetchMessages]);
 
+  }, [session, setValue, fetchAcceptMessages, fetchMessages]);
+
+  
   // Handle switch change
   const handleSwitchChange = async () => {
     try {
@@ -102,7 +109,7 @@ function UserDashboard() {
       setValue('acceptMessages', !acceptMessages);
       toast.add({
         title: response.data.message,
-      type:"error"
+      type:"success"
       });
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -116,8 +123,24 @@ function UserDashboard() {
     }
   };
 
-  if (!session || !session.user) {
-    return <div></div>;
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center gap-2">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <span>Loading dashboard...</span>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-2">
+        <p>You need to sign in to view your dashboard.</p>
+        <Link href="/sign-in" className="text-blue-600 underline">
+          Sign in
+        </Link>
+      </div>
+    );
   }
 
   const { username } = session.user as User;
@@ -169,6 +192,7 @@ function UserDashboard() {
         onClick={(e) => {
           e.preventDefault();
           fetchMessages(true);
+
         }}
       >
         {isLoading ? (

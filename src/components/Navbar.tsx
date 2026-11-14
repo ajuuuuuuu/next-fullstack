@@ -19,7 +19,7 @@ const user:User =session?.user as User
                 session?(
                     <>
                     <span className='mr-4'>Welcome ,{user?.username|| user?.email}</span>
-                    <Button className='w-full md:w-auto' onClick={()=>signOut()}>Logout</Button></>
+                    <Button className='w-full md:w-auto' onClick={()=>signOut({callbackUrl:'/'})}>Logout</Button></>
                 ):(<Link href="/sign-in" className={buttonVariants({ className: 'w-full md:w-auto' })}>Login</Link>)
             }
             </div>

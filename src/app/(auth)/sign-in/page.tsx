@@ -37,6 +37,7 @@ const Page = () => {
       identifier: data.identifier,
       password: data.password,
     });
+    console.log("result in sign in page :", result)
     if (result?.error) {
      if(result.error === 'CredentialsSignin'){
        toast.add({

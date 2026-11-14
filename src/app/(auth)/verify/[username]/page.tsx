@@ -26,6 +26,10 @@ const VerifyAccountForm = () => {
   const params = useParams<{ username: string }>();
   const form = useForm<z.infer<typeof verifySchema>>({
     resolver: zodResolver(verifySchema),
+    defaultValues: {
+      username: params.username,
+      code: "",
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof verifySchema>) => {
@@ -39,7 +43,10 @@ const VerifyAccountForm = () => {
         description: response.data.message,
       });
 
-      router.replace("/sign-in");
+      // router.replace("/sign-in");
+       
+      router.replace('/dashboard')
+
     } catch (error) {
       console.error("error in signup of user", error);
       const axiosError = error as AxiosError<ApiResponse>;

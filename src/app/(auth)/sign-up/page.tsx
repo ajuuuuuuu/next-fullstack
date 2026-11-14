@@ -59,8 +59,6 @@ const Page=()=> {
           );
           console.log("this is response",response);
           console.log("this is response.data.message",response.data.message)
-        //   let message = response.data.message
-        // setUsernameMessage(message)
           setUsernameMessage(response.data.message);
         
 
