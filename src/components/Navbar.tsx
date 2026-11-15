@@ -1,13 +1,18 @@
 'use client'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useSession ,signOut} from 'next-auth/react'
 import {User} from 'next-auth'
 import { Button, buttonVariants } from '@/components/ui/button'
 
 function Navbar() {
 const {data:session} = useSession()
+const pathname = usePathname()
 
 const user:User =session?.user as User
+
+    if (pathname.startsWith('/u/')) return null
+    if (pathname.startsWith('/dashboard')) return null
 
     return (
         <>

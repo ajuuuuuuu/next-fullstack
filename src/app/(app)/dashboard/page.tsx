@@ -16,6 +16,7 @@ import Link from 'next/link';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Skeleton } from "@/components/ui/skeleton"
 
 function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -125,10 +126,27 @@ function UserDashboard() {
 
   if (status === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center gap-2">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span>Loading dashboard...</span>
+       <div className="flex w-full max-w-300 flex-col gap-7 mx-35 my-14">
+      <div className="flex flex-col gap-3">
+        <Skeleton className="h-10 w-63" />
+        <Skeleton className="h-4 w-40 mt-2" />
       </div>
+      <div className="flex justify-between gap-3 ">
+        <Skeleton className="h-4 w-45" />
+        <Skeleton className="h-6 w-10  mr-30"  />
+      </div>
+        <Skeleton className="h-5 w-40 mt-3" />
+      <Skeleton className="h-7 w-11 mt-3" />
+       <div className="flex flex-row gap-20">
+        <Skeleton className="h-15 w-135" />
+        <Skeleton className="h-15 w-135" />
+      </div>
+       <div className="flex flex-row gap-20">
+        <Skeleton className="h-15 w-135" />
+        <Skeleton className="h-15 w-135" />
+      </div>
+    </div>
+    
     );
   }
 
